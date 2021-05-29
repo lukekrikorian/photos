@@ -1,4 +1,4 @@
 static/photos/*.png
-static/thumnails/*.png
+static/thumbnails/*.png
 .DS_Store
 *.swp

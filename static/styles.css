@@ -1,0 +1,47 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+body {
+	font-family: -apple-system, BlinkMacSystemFont, "avenir next", avenir,
+	helvetica, "helvetica neue", ubuntu, roboto, noto, "segoe ui", arial,
+	sans-serif;
+	font-weight: 400;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	background-color: #001;
+	color: #EEF;
+	padding: 10px;
+}
+
+.thumb {
+	width: 75px;
+	height: 75px;
+	display: block;
+	float: left;
+	margin: 1.5px;
+}
+
+.large {
+	max-height: 100%;
+	max-width: 100%;
+	display: none;
+}
+
+#container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-content: center;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+}
+
+.show {
+	display: inline !important;
+}

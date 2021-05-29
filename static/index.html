@@ -4,67 +4,20 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="/static/styles.css">
 		<title>Photos</title>
 	</head>
 	<style>
-		* {
-			box-sizing: border-box;
-			margin: 0;
-		}
-		body {
-			font-family: -apple-system, BlinkMacSystemFont, "avenir next", avenir,
-			helvetica, "helvetica neue", ubuntu, roboto, noto, "segoe ui", arial,
-			sans-serif;
-			font-weight: 400;
-			-webkit-font-smoothing: antialiased;
-			text-rendering: optimizeLegibility;
-			background-color: #001;
-			color: #EEF;
-			padding: 10px;
-		}
-
-		.thumb {
-			width: 75px;
-			height: 75px;
-			display: block;
-			float: left;
-			margin: 1.5px;
-		}
-
-		#large {
-			max-height: 100%;
-			max-width: 100%;
-		}
-
-		#container {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			display: flex;
-			align-content: center;
-			align-items: center;
-			justify-content: center;
-			pointer-events: none;
-		}
+	
 	</style>
 	<body>
+		<div id="thumbnails">
 		{{ range $i, $thumb := .Thumbnails }}
-			<img onclick="clearimg(this)" onmouseover="loadimg(this)" class="thumb" id="{{ $i }}" src="/static/thumbnails/{{ $thumb }}"/>
+			<img height="100" width="100" onclick="toggle(this)" class="thumb" id="{{ $i }}" src="/static/thumbnails/{{ $thumb }}"/>
 		{{ end }}
-		<div id="container"><img id="large" src=""></div>
-		<script>
-			var large = document.getElementById("large");
-			var clearimg = function(){
-				large.src = ""
-				large.style.display = "none";
-			}
-			var loadimg = function(e){
-				large.src = "static/photos/" + e.id + ".png"
-				large.style.display = "inline";
-			}
-		</script>	
+		</div>
+		<div id="container"></div>
+		<script src="/static/photos.js"></script>	
 	</body>
 </html>
 {{ end }}
