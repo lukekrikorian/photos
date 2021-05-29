@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"os"
+	"sort"
 )
 
 var (
@@ -78,5 +79,6 @@ func GetFiles(path string) (names []string) {
 			names = append(names, file.Name())
 		}
 	}
+	sort.Strings(names)
 	return names
 }

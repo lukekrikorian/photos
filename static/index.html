@@ -13,7 +13,7 @@
 	<body>
 		<div id="thumbnails">
 		{{ range $i, $thumb := .Thumbnails }}
-			<img height="100" width="100" onclick="toggle(this)" class="thumb" id="{{ $i }}" src="/static/thumbnails/{{ $thumb }}"/>
+			<img height="100" width="100" onclick="toggle(this)" class="thumb" id="{{ $i }}" src="/static/thumbnails/{{ $i }}.png"/>
 		{{ end }}
 		</div>
 		<div id="container"></div>

@@ -2,3 +2,4 @@ static/photos/*.png
 static/thumbnails/*.png
 .DS_Store
 *.swp
+output.log
