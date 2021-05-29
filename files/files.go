@@ -38,6 +38,7 @@ func SavePhoto(f *multipart.File, h *multipart.FileHeader, rotate bool) {
 			img = imaging.Fit(img, 1000, 1000, imaging.Lanczos)
 			png.Encode(newfile, img)
 			GenerateThumbnail(path, count)
+			count += 1
 		}
 	}
 }
