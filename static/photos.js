@@ -1,6 +1,11 @@
 var container = document.getElementById("container")
-function toggle(e){
-	var url = "static/photos/" + e.id + ".png";
+var max = document.getElementsByClassName("thumb").length - 1
+var cursor = -1
+ 
+function toggle(i) {
+	cursor = i	
+	console.log("going to", i)
+	var url = "static/photos/" + i + ".png";
 	var show = document.querySelector(".show")
 	if (show !== null && show.id !== url) {
 		show.classList.remove("show")
@@ -17,3 +22,20 @@ function toggle(e){
 	}
 }
 
+var less = ["ArrowUp", "ArrowLeft", "k", "h"];
+var more = ["ArrowDown", "ArrowRight", "j", "l"];
+
+function keylisten(e) {
+	var next = cursor
+	if (less.includes(e.key)) {
+		next = Math.max(cursor - 1, 0)
+	} else if (more.includes(e.key)) {
+		next = Math.min(cursor + 1, max)
+	} 
+
+	if (next !== cursor) {
+		toggle(next)
+	}
+}
+
+window.addEventListener("keydown", keylisten, true)
