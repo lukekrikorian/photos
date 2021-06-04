@@ -21,17 +21,34 @@
 			color: #EEF;
 			padding: 10px;
 		}
-
+		p {
+			font-weight: 500;
+		}
+		body * {
+			margin-bottom: 10px;
+		}
+		input[type=submit] {
+			background: none;
+			color: white;
+			border: none;
+			font-size: 1rem;
+			color: #ba1111;
+			padding: 0;
+		}
+		a {
+			color: #ba1111;
+			text-decoration: none;
+		}
 		</style>
 	<body>
-		<p>New Photo</p>	
+		<p>Add a new photos or <a href="/">go home</a></p>			
 		<form action="/photos" method="POST" enctype="multipart/form-data">
 			<input type="file" accept=".png" name="photo">
 			<br>
 			<input type="checkbox" name="rotate" value="rotate" id="rotate">
-			<label for="rotate">iphone photo</label>
+			<label for="rotate">iPhone Photo</label>
 			<br>
-			<input type="submit">
+			<input type="submit" value="➤ Submit">
 		</form>
 	</body>
 </html>
