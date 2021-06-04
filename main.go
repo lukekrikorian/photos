@@ -2,9 +2,6 @@ package main
 
 import (
 	"fmt"
-	_ "image"
-	_ "image/png"
-	"log"
 	"net/http"
 	"photos/files"
 	"text/template"
@@ -12,29 +9,28 @@ import (
 )
 
 var (
-	index = template.Must(template.ParseFiles("static/index.html")).Lookup("index")
+	tmpls, err = template.ParseFiles("static/index.html")
+	index      = template.Must(tmpls, err).Lookup("index")
 )
 
 type Injection struct {
-	Thumbnails []string
+	Thumbnails []int
 }
 
 func serveIndex(w http.ResponseWriter, r *http.Request) {
 	index.Execute(w, Injection{
-		Thumbnails: make([]string, files.Count),
+		Thumbnails: make([]int, files.Count),
 	})
 }
 
 func handleUploads(w http.ResponseWriter, r *http.Request) {
-	defer http.Redirect(w, r, "/static/upload.html", http.StatusSeeOther)
+	defer http.ServeFile(w, r, "static/upload.html")
 
 	if r.Method == http.MethodGet {
 		return
 	}
 
-	r.ParseForm()
-
-	r.ParseMultipartForm(10 << 20)
+	r.ParseMultipartForm(10 << 20) // 10 MB
 	file, header, err := r.FormFile("photo")
 
 	if err != nil {
@@ -42,12 +38,7 @@ func handleUploads(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	rotate := false
-	if r.Form["rotate"] != nil {
-		rotate = true
-	}
-
-	files.SavePhoto(&file, header, rotate)
+	files.SavePhoto(&file, header)
 }
 
 func main() {
@@ -68,5 +59,7 @@ func main() {
 		ReadTimeout:  10 * time.Second,
 	}
 
-	log.Fatal(s.ListenAndServe())
+	if err = s.ListenAndServe(); err != nil {
+		fmt.Println(err)
+	}
 }

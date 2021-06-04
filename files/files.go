@@ -10,31 +10,26 @@ import (
 	"os"
 )
 
+var Count = len(GetFiles("static/photos"))
+
 var (
-	Count  = len(GetFiles("static/photos"))
 	thumbs = "static/thumbnails/"
 	photos = "static/photos/"
 )
-
-type SubImager interface {
-	SubImage(r image.Rectangle) image.Image
-}
 
 func crop(i image.Image) image.Image {
 	x := i.Bounds().Size().X / 2
 	y := i.Bounds().Size().Y / 2
 	rect := image.Rect(x-50, y-50, x+50, y+50)
-	return i.(SubImager).SubImage(rect)
+	return imaging.Crop(i, rect)
 }
 
-func SavePhoto(f *multipart.File, h *multipart.FileHeader, rotate bool) {
+func SavePhoto(f *multipart.File, h *multipart.FileHeader) {
 	path := photos + fmt.Sprintf("%d.png", Count)
 	if newfile, err := os.Create(path); err == nil {
 		upload, _ := h.Open()
-		if img, _, err := image.Decode(upload); err == nil {
-			if rotate {
-				img = imaging.Rotate270(img)
-			}
+		orientation := imaging.AutoOrientation(true)
+		if img, err := imaging.Decode(upload, orientation); err == nil {
 			img = imaging.Fit(img, 1000, 1000, imaging.Lanczos)
 			png.Encode(newfile, img)
 			GenerateThumbnail(path, Count)
