@@ -8,13 +8,12 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"os"
-	"sort"
 )
 
 var (
+	Count  = len(GetFiles("static/photos"))
 	thumbs = "static/thumbnails/"
 	photos = "static/photos/"
-	count  = len(GetFiles("static/photos"))
 )
 
 type SubImager interface {
@@ -29,7 +28,7 @@ func crop(i image.Image) image.Image {
 }
 
 func SavePhoto(f *multipart.File, h *multipart.FileHeader, rotate bool) {
-	path := photos + fmt.Sprintf("%d.png", count)
+	path := photos + fmt.Sprintf("%d.png", Count)
 	if newfile, err := os.Create(path); err == nil {
 		upload, _ := h.Open()
 		if img, _, err := image.Decode(upload); err == nil {
@@ -38,8 +37,8 @@ func SavePhoto(f *multipart.File, h *multipart.FileHeader, rotate bool) {
 			}
 			img = imaging.Fit(img, 1000, 1000, imaging.Lanczos)
 			png.Encode(newfile, img)
-			GenerateThumbnail(path, count)
-			count += 1
+			GenerateThumbnail(path, Count)
+			Count += 1
 		}
 	}
 }
@@ -62,23 +61,11 @@ func GenerateThumbnail(path string, index int) {
 	}
 }
 
-func GenerateThumbnails() {
-	for index, file := range GetFiles("static/photos") {
-		thumb := thumbs + fmt.Sprintf("%d.png", index)
-		photo := photos + file
-		if _, err := os.Stat(thumb); os.IsNotExist(err) {
-			fmt.Println("Generating thumbnail for", file)
-			GenerateThumbnail(photo, index)
-		}
-	}
-}
-
 func GetFiles(path string) (names []string) {
 	if files, err := ioutil.ReadDir(path); err == nil {
 		for _, file := range files {
 			names = append(names, file.Name())
 		}
 	}
-	sort.Strings(names)
 	return names
 }

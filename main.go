@@ -17,13 +17,11 @@ var (
 
 type Injection struct {
 	Thumbnails []string
-	Photos     []string
 }
 
 func serveIndex(w http.ResponseWriter, r *http.Request) {
 	index.Execute(w, Injection{
-		Photos:     files.GetFiles("static/photos"),
-		Thumbnails: files.GetFiles("static/thumbnails"),
+		Thumbnails: make([]string, files.Count),
 	})
 }
 
@@ -53,7 +51,6 @@ func handleUploads(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	files.GenerateThumbnails()
 	fmt.Println("Starting!")
 
 	handler := http.DefaultServeMux
@@ -62,7 +59,7 @@ func main() {
 	handler.Handle("/static/", http.StripPrefix("/static/", static))
 
 	handler.HandleFunc("/", serveIndex)
-	handler.HandleFunc("/photos", handleUploads)
+	handler.HandleFunc("/upload", handleUploads)
 
 	s := &http.Server{
 		Handler:      handler,
