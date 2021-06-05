@@ -1,0 +1,22 @@
+{{ define "feed" }}
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+	<title>{{ .Author }}’s Photos</title>
+	<link>{{ .BaseURL }}</link>
+	<description>New photos from {{ .Author }}</description>
+
+	{{ $outer := . }}
+	{{ range $i, $date := .Dates }}
+	<item>
+		<title>Image #{{ $i }}</title>
+		<author>{{ $outer.Author }}</author>
+		<description><![CDATA[<img src="{{ $outer.BaseURL }}/static/photos/{{ $i}}.png"/>]]></description>
+		<link>{{ $outer.BaseURL }}/#{{ $i }}</link>
+		<guid isPermaLink="false">{{ $i }}</guid>
+		<pubDate>{{ $date }}</pubDate>
+	</item>
+	{{ end }}
+</channel>
+</rss>
+{{ end }}

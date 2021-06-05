@@ -2,12 +2,13 @@ package files
 
 import (
 	"fmt"
-	"github.com/disintegration/imaging"
 	"image"
 	"image/png"
 	"io/ioutil"
 	"mime/multipart"
 	"os"
+
+	"github.com/disintegration/imaging"
 )
 
 var Count = len(GetFiles("static/photos"))
@@ -16,6 +17,8 @@ var (
 	thumbs = "static/thumbnails/"
 	photos = "static/photos/"
 )
+
+const RFC822 = "Mon, 02 Jan 2006 15:04:05 -0700"
 
 func crop(i image.Image) image.Image {
 	x := i.Bounds().Size().X / 2
@@ -54,6 +57,17 @@ func GenerateThumbnail(path string, index int) {
 		cropped := crop(img)
 		png.Encode(f, cropped)
 	}
+}
+
+func GetFileDates(path string) (dates []string) {
+	if files, err := ioutil.ReadDir(path); err == nil {
+		for _, file := range files {
+			date := file.ModTime().Format(RFC822)
+			fmt.Println(date)
+			dates = append(dates, date)
+		}
+	}
+	return dates
 }
 
 func GetFiles(path string) (names []string) {

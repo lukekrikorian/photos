@@ -1,5 +1,7 @@
 static/photos/*.png
 static/thumbnails/*.png
+static/config.json
 .DS_Store
 *.swp
 output.log
+

@@ -3,15 +3,24 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"photos/config"
 	"photos/files"
 	"text/template"
 	"time"
 )
 
 var (
-	tmpls, err = template.ParseFiles("static/index.html")
-	index      = template.Must(tmpls, err).Lookup("index")
+	tfiles, err = template.ParseFiles("static/index.html", "static/feed.xml")
+	tmpls       = template.Must(tfiles, err)
+	index       = tmpls.Lookup("index")
+	feed        = tmpls.Lookup("feed")
 )
+
+type RSS struct {
+	Author  string
+	BaseURL string
+	Dates   []string
+}
 
 type Injection struct {
 	Thumbnails []int
@@ -20,6 +29,15 @@ type Injection struct {
 func serveIndex(w http.ResponseWriter, r *http.Request) {
 	index.Execute(w, Injection{
 		Thumbnails: make([]int, files.Count),
+	})
+}
+
+func serveFeed(w http.ResponseWriter, r *http.Request) {
+	w.Header().Add("Content-Type", "application/rss+xml")
+	feed.Execute(w, RSS{
+		Author:  config.Config.Author,
+		BaseURL: config.Config.BaseURL,
+		Dates:   files.GetFileDates("static/photos"),
 	})
 }
 
@@ -51,6 +69,7 @@ func main() {
 
 	handler.HandleFunc("/", serveIndex)
 	handler.HandleFunc("/upload", handleUploads)
+	handler.HandleFunc("/feed", serveFeed)
 
 	s := &http.Server{
 		Handler:      handler,
