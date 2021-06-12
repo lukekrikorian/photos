@@ -16,7 +16,7 @@ var (
 )
 
 func init() {
-	file, err := os.Open("static/config.json")
+	file, err := os.Open("config.json")
 	if err != nil {
 		fmt.Println("Couldn't find static/config.json")
 		os.Exit(1)
