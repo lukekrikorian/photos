@@ -26,6 +26,7 @@ function toggle(i) {
 		img.classList.add("large", "show")
 		img.id = url
 		img.src = url
+		img.onclick = function() { toggle(i) }
 		container.appendChild(img)
 	} else {
 		img.classList.toggle("show")
